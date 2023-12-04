@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Subject, Teacher, Group, Student, GroupSubjectTeacher, TeacherSubject
+from .models import Subject, Teacher, Group, Student, GroupSubjectTeacher
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -30,12 +30,6 @@ class StudentSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = GroupSubjectTeacher
 #         fields = '__all__'
-
-
-class TeacherSubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TeacherSubject
-        fields = '__all__'
 
 
 class GroupSubjectTeacherSerializer(serializers.ModelSerializer):

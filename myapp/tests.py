@@ -52,7 +52,6 @@
 #         self.assertTrue('message' in response.json())
 
 
-
 # class ScheduleDisplayViewTest(TestCase):
 #     def setUp(self):
 #         self.factory = RequestFactory()
@@ -149,59 +148,78 @@
 
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Group, Student, Teacher, GroupSubjectTeacher  # Import your models here
+
+from .forms import StudentRegistrationForm
+from .models import Group, Student, Teacher, Subject, GroupSubjectTeacher
 
 
 class StudentRegistrationViewTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.url = reverse('student-registration')  # Replace with your URL name
+    @classmethod
+    def setUpTestData(cls):
+        Group.objects.create(name='Test1', year=1)
+        Group.objects.create(name='Test2', year=2)
 
     def test_student_registration_view_get(self):
-        response = self.client.get(self.url)
+        url = reverse('student-registration')
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'student_registration.html')
+        self.assertIsInstance(response.context['form'], StudentRegistrationForm)
+        self.assertEqual(len(response.context['groups']), Group.objects.count())
 
-    def test_student_registration_view_post_valid(self):
+    def test_student_registration_post_valid(self):
+        url = reverse('student-registration')
         data = {
             'first_name': 'John',
             'last_name': 'Doe',
-            # Add other fields from your StudentRegistrationForm
+            'group': Group.objects.first().id
         }
-        response = self.client.post(self.url, data)
-        self.assertEqual(response.status_code, 302)  # Assuming redirection after successful registration
-        # Add additional assertions to check if the student was actually created
-
-    def test_student_registration_view_post_invalid(self):
-        response = self.client.post(self.url, {})
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue('form' in response.context)
-        self.assertTrue(response.context['form'].errors)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Student.objects.filter(first_name='John', last_name='Doe').exists())
+        self.assertRedirects(response, reverse('schedule-display'))
 
 
 class ScheduleDisplayViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Create test data for this view
-        Group.objects.create(name="TestGroup", year=2023)
-        # Add more setup data as required
+        cls.group = Group.objects.create(name='Тестова', year=2021)
+        cls.subject = Subject.objects.create(name='Математика', description='Опис предмету')
+        cls.teacher = Teacher.objects.create(first_name='Іван', last_name='Петров')
+        cls.group_subject_teacher = GroupSubjectTeacher.objects.create(
+            id=1,
+            group=cls.group,
+            subject=cls.subject,
+            teacher=cls.teacher,
+            type_lesson='Лекція',
+            day='Понеділок',
+            time='10:00',
+            location='Аудиторія 101'
+        )
+
 
     def setUp(self):
         self.client = Client()
-        self.url = reverse('schedule-display')  # Replace with your URL name
+        self.url = reverse('schedule-display')
 
-    def test_schedule_display_view_get_no_params(self):
+    def test_get_with_authenticated_user(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'schedule_display.html')
         self.assertIn('groups', response.context)
-        # Add more assertions as needed
+        self.assertIn('student_name', response.context)
+        self.assertIsNone(response.context.get('selected_day'))
+        self.assertEqual(len(response.context['groups']), Group.objects.count())
 
-    def test_schedule_display_view_get_with_params(self):
-        # Assuming 'group' and 'day' are the query params
-        response = self.client.get(self.url + '?group=1&day=Monday')
+    def test_get_with_parameters(self):
+        response = self.client.get(self.url, {'group': self.group.id, 'day': 'Понеділок'})
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'schedule_display.html')
-        # Verify that the context data is correct
-        # Add more assertions as needed
+        self.assertEqual(len(response.context['schedule']), 1)
+        self.assertEqual(response.context['selected_day'], 'Понеділок')
+        self.assertEqual(response.context['schedule'][0].day, 'Понеділок')
+        self.assertEqual(response.context['schedule'][0].group.id, self.group.id)
 
+    def test_get_with_invalid_parameters(self):
+        response = self.client.get(self.url, {'group': 999, 'day': 'Понеділок'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['schedule']), 0)

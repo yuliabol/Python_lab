@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Teacher, Subject, Group, GroupSubjectTeacher, TeacherSubject, Student
+from .models import Teacher, Subject, Group, GroupSubjectTeacher, Student
 
 
 class GroupSubjectTeacherInline(admin.TabularInline):

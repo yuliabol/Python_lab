@@ -88,20 +88,12 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'schedule',  # Назва вашої бази даних у MySQL Workbench
+        'NAME': 'schedule2',  # Назва вашої бази даних у MySQL Workbench
         'USER': 'root',  # Ім'я користувача для підключення до бази даних
-        'PASSWORD': '76790405qghN',  # Пароль для підключення
+        'PASSWORD': 'namor2004',  # Пароль для підключення
         'HOST': 'localhost',  # Адреса сервера бази даних (зазвичай 'localhost')
         'PORT': '3306',  # Порт, на якому працює MySQL (зазвичай '3306' для MySQL)
     },
-    'test': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_db',
-        'USER': 'root',
-        'PASSWORD': '76790405qghN',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
 }
 
 
