@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Schedule</title>
+</head>
+<body>
+<h1>Розклад</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <p>День: {{ teacher_schedule_to_edit.day }}</p>
+        <p>Час: {{ teacher_schedule_to_edit.time }}</p>
+        <p>Локація: {{ teacher_schedule_to_edit.location }}</p>
+        <label for="day">Змінити день:</label>
+        <input type="text" id="day" name="day" value="{{ teacher_schedule_to_edit.day }}">
+        <label for="time">Змінити час:</label>
+        <input type="text" id="time" name="time" value="{{ teacher_schedule_to_edit.time }}">
+        <label for="location">Змінити локацію:</label>
+        <input type="text" id="location" name="location" value="{{ teacher_schedule_to_edit.location }}">
+        <input type="submit" value="Update">
+    </div>
+</form>
+</body>
+</html>
+
+

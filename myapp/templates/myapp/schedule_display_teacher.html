@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Schedule</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column; /* змінено напрямок основного контейнера на вертикальний */
+        }
+
+        h1 {
+            font-size: 50px;
+            margin-bottom: 20px; /* додано відступ вниз для заголовку */
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        li {
+            font-size: 30px;
+            width: 600px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background-color: #FCF3F3;
+            margin-top: 20px; /* додано відступ вгору для списку */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Розклад</h1>
+    {% if teacher_schedule %}
+        <ul>
+        {% for entry in teacher_schedule %}
+            <li>{{ entry.day }} - {{ entry.time }} - {{ entry.location }}</li>
+            <a href="{% url 'edit-schedule' entry.group_id entry.subject_id entry.type_lesson %}" class="edit-btn">Редагувати розклад</a>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No schedule available for this teacher.</p>
+    {% endif %}
+</body>
+</html>
+

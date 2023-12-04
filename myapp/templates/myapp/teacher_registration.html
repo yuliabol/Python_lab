@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Registration{% endblock %}
+
+{% block content %}
+    <h1>Вхід для викладачів</h1>
+    <form method="POST" action="{% url 'teacher-registration' %}">
+    {% csrf_token %}
+    <label for="first_name">Ім'я:</label>
+    <input type="text" id="first_name" name="first_name"><br><br>
+    <label for="last_name">Прізвище:</label>
+    <input type="text" id="last_name" name="last_name"><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+
+{% endblock %}

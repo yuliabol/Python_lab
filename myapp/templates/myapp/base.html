@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Default Title{% endblock %}</title>
+        <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        input[type="text"] {
+            font-size: 20px;
+        }
+        h1 {
+            font-size: 50px;
+        }
+
+        .container {
+            text-align: center;
+        }
+        label {
+        display: inline-block;
+        width: 100px;
+        text-align: left;
+        margin-right: 50px; /* Відступ справа від назви поля */
+        margin-bottom: 10px; /* Відступ знизу назви поля */
+        }
+
+        form {
+            font-size: 30px;
+            width: 450px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background-color: #FCF3F3;
+        }
+        select {
+            width: 200px;
+            font-size: 20px;
+        }
+        button {
+            font-size: 25px;
+            width: 200px;
+            height: 30px;
+            margin-top: 10px;
+            border-radius: 20px;
+            background-color: #fcdcdc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
